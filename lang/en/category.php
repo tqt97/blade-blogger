@@ -1,0 +1,45 @@
+<?php
+
+return [
+    'title' => 'Categories',
+    'pages' => [
+        'list' => 'List categories',
+        'create' => 'Create category',
+        'edit' => 'Edit category',
+        'delete' => 'Delete category',
+        'back' => 'Back',
+        'show' => 'Show category',
+    ],
+    'form' => [
+        'name' => 'Name',
+        'parent' => 'Parent',
+        'description' => 'Description',
+        'slug' => 'Slug',
+        'position' => 'Position',
+        'is_active' => 'Is Active',
+        'submit' => 'Submit',
+        'select_parent' => 'Select parent',
+        'category' => 'Category',
+        'categories' => 'Categories',
+    ],
+    'columns' => [
+        'id' => 'ID',
+        'name' => 'Name',
+        'slug' => 'Slug',
+        'parent' => 'Parent',
+        'position' => 'Position',
+        'is_active' => 'Is Active',
+        'action' => 'Action',
+    ],
+    'messages' => [
+        'create_success' => 'Category created successfully',
+        'create_fail' => 'Category created fail',
+        'update_success' => 'Category updated successfully',
+        'update_fail' => 'Category updated fail',
+        'delete_success' => 'Category deleted successfully',
+        'delete_fail' => 'Category deleted fail',
+        'bulk_delete_success' => 'Categories deleted successfully',
+        'bulk_delete_fail' => 'Categories deleted fail',
+        'bulk_delete_empty' => 'Categories not selected',
+    ],
+];

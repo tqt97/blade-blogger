@@ -8,18 +8,24 @@ use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
+        $search = $request->input('search');
+
         $categories = Category::query()
-            ->select('id', 'name', 'slug', 'parent_id', 'is_active')
+            ->search($search)
+            ->select('id', 'name', 'slug', 'parent_id', 'position', 'is_active')
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         return view('admin.categories.index', [
             'categories' => $categories,
@@ -31,8 +37,9 @@ class CategoryController extends Controller
      */
     public function create(): View
     {
-        $categories = Category::query()->select('id', 'name')
-            ->where('is_active', true)
+        $categories = Category::query()
+            ->active()
+            ->select('id', 'name')
             ->get();
 
         return view('admin.categories.create', [
@@ -45,9 +52,18 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
-        Category::query()->create($request->validated());
+        try {
+            Category::query()->create($request->validated());
 
-        return redirect()->route('admin.categories.index')->with('success', 'Category created successfully');
+            return to_route('admin.categories.index')->with('success', __('category.messages.create_success'));
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+
+            return back()
+                ->withInput()
+                ->with('error', __('category.messages.create_fail'));
+        }
+
     }
 
     /**
@@ -65,8 +81,8 @@ class CategoryController extends Controller
      */
     public function edit(Category $category): View
     {
-        $categoryOptions = Category::query()->select('id', 'name')
-            ->where('is_active', true)
+        $categoryOptions = Category::query()->active()
+            ->select('id', 'name')
             ->get();
 
         return view('admin.categories.edit', [
@@ -80,9 +96,15 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
-        $category->update($request->validated());
+        try {
+            $category->update($request->validated());
 
-        return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully');
+            return to_route('admin.categories.index')->with('success', __('category.messages.update_success'));
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+
+            return back()->with('error', __('category.messages.update_fail'));
+        }
     }
 
     /**
@@ -90,8 +112,31 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category): RedirectResponse
     {
-        $category->delete();
+        try {
+            $category->delete();
 
-        return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully');
+            return to_route('admin.categories.index')->with('success', __('category.messages.delete_success'));
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+
+            return back()->with('error', __('category.messages.delete_fail'));
+        }
+    }
+
+    public function bulkDelete(Request $request): RedirectResponse
+    {
+        try {
+            $ids = explode(',', $request->input('ids'));
+            if (empty($ids)) {
+                return back()->with('warning', __('category.messages.bulk_delete_empty'));
+            }
+            Category::query()->whereIn('id', $ids)->delete();
+
+            return to_route('admin.categories.index')->with('success', __('category.messages.bulk_delete_success'));
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+
+            return back()->with('error', __('category.messages.bulk_delete_fail'));
+        }
     }
 }

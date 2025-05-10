@@ -1,3 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.flash-container {
+    position: fixed;
+    top: 20px;
+    right: 10px;
+    /* transform: translateX(-50%); */
+    z-index: 9999;
+    width: auto;
+    max-width: 90%;
+}
+
+.flash-enter {
+
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.4s ease;
+}
+
+.flash-leave {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.4s ease;
+}

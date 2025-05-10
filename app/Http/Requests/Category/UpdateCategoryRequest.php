@@ -25,10 +25,25 @@ class UpdateCategoryRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255',  Rule::unique('categories', 'slug')->ignore($this->category)],
-            'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
-            'sort' => ['nullable', 'integer'],
+            'slug' => ['required', 'string', 'alpha_dash', 'lowercase', 'max:255', Rule::unique('categories', 'slug')->ignore($this->category)],
+            'parent_id' => ['nullable', 'integer', 'exists:categories,id', 'not_in:'.$this->route('category')?->id],
+            'position' => ['nullable', 'integer'],
             'is_active' => ['nullable', 'boolean'],
         ];
+    }
+
+    /**
+     * Prepare the request data for validation.
+     *
+     * This method is called right before the request data is validated.
+     * It allows you to modify the request data before it's validated.
+     *
+     * In this case, we're converting the "is active" field to a boolean.
+     */
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'is_active' => $this->boolean('is_active'),
+        ]);
     }
 }

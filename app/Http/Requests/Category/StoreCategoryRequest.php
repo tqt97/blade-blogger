@@ -4,6 +4,7 @@ namespace App\Http\Requests\Category;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class StoreCategoryRequest extends FormRequest
 {
@@ -24,9 +25,9 @@ class StoreCategoryRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:categories,slug'],
+            'slug' => ['required', 'string', 'alpha_dash', 'lowercase', 'max:255', 'unique:categories,slug'],
             'parent_id' => ['nullable', 'integer', 'exists:categories,id'],
-            'sort' => ['nullable', 'integer'],
+            'position' => ['nullable', 'integer'],
             'is_active' => ['nullable', 'boolean'],
         ];
     }
@@ -41,6 +42,10 @@ class StoreCategoryRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
+        $this->merge([
+            'slug' => $this->input('slug') ?: Str::slug($this->input('name')),
+        ]);
+
         $this->merge([
             'is_active' => $this->boolean('is_active'),
         ]);

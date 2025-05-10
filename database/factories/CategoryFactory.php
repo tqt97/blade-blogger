@@ -20,7 +20,7 @@ class CategoryFactory extends Factory
             'name' => $name = fake()->unique()->word(),
             'slug' => str($name)->slug(),
             'is_active' => fake()->boolean(),
-            'sort' => fake()->numberBetween(0, 100),
+            'position' => fake()->numberBetween(0, 100),
             'parent_id' => null,
         ];
     }

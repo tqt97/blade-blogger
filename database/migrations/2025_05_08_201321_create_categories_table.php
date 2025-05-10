@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->foreignId('parent_id')->nullable()->constrained('categories')->cascadeOnDelete();
-            $table->integer('sort')->default(0);
+            $table->integer('position')->default(0);
             $table->boolean('is_active')->default(false);
             $table->timestamps();
         });

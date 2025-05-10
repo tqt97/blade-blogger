@@ -18,18 +18,19 @@
                     </div>
 
                     <div class="bg-white border rounded-lg px-8 py-6 mx-auto my-8">
-                        <form method="POST" action="{{ route('admin.categories.store') }}">
+                        <form method="POST" action="{{ route('admin.categories.update', $category) }}">
+                            @method('PUT')
                             @csrf
                             <div class="flex gap-4 items-center">
                                 <div class="mb-4 w-full">
                                     <x-forms.label name="name" :label="__('category.form.name')" required />
-                                    <x-text-input id="name" class="mt-1 w-full" type="text" name="name"
-                                        value="{{ old('name') }}" required />
+                                    <x-text-input id="name" class="block mt-1 w-full" type="text" name="name"
+                                        value="{{ $category->name }}" required />
                                 </div>
                                 <div class="mb-4 w-full">
                                     <x-forms.label name="slug" :label="__('category.form.slug')" />
-                                    <x-text-input id="slug" class="mt-1 w-full" type="text" name="slug"
-                                        value="{{ old('slug') }}" />
+                                    <x-text-input id="slug" class="block mt-1 w-full" type="text" name="slug"
+                                        value="{{ $category->slug }}" />
                                 </div>
                             </div>
 
@@ -39,25 +40,24 @@
                                     <select name="parent_id" id="parent_id"
                                         class="mt-2 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                                         <option value="">{{ __('category.form.select_parent') }}</option>
-                                        @foreach ($categories as $category)
-                                            <option value="{{ $category->id }}"
-                                                {{ (int) old('parent_id') === $category->id ? 'selected' : '' }}>
-                                                {{ $category->name }}
+                                        @foreach ($categoryOptions as $option)
+                                            <option value="{{ $option->id }}" {{ $option->id == $category->parent_id ? 'selected' : ''}} {{ $option->id == $category->id ? 'disabled' : '' }}>
+                                                {{ $option->name }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="mb-4 w-full">
                                     <x-forms.label name="position" :label="__('category.form.position')" />
-                                    <x-text-input id="position" class="mt-1 w-full" type="number" min="0"
-                                        name="position" value="{{ old('position') ?? 0 }}" />
+                                    <x-text-input id="position" class="block mt-1 w-full" type="number" min="0"
+                                        name="position" value="{{ $category->position }}" />
                                 </div>
                             </div>
 
                             <div class="flex gap-4 items-center">
                                 <div class="mb-4 w-1/2">
                                     <x-forms.label name="is_active" :label="__('category.form.is_active')" />
-                                    <x-forms.checkbox name="is_active" />
+                                    <x-forms.checkbox name="is_active" checked="{{ $category->is_active}}" />
                                 </div>
                             </div>
                             <div>

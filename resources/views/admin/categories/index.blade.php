@@ -99,7 +99,7 @@
                                             @endif
                                         </td>
                                         <td class="flex items-center justify-center gap-2">
-                                            <a href="{{ route('admin.categories.edit', $category->id) }}" class="text-blue-600 hover:text-blue-800">
+                                            <a href="{{ route('admin.categories.edit', $category) }}" class="text-blue-600 hover:text-blue-800">
                                                 <x-icons.pencil-square />
                                             </a>
                                             <form action="{{ route('admin.categories.destroy', $category) }}" method="POST"
@@ -122,7 +122,7 @@
 
                             </tbody>
                         </table>
-                        <div class="px-3 py-5 ">
+                        <div class="px-3 py-4">
                             {{ $categories->links() }}
                         </div>
                     </div>

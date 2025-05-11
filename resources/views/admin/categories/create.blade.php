@@ -23,14 +23,12 @@
                             <div class="flex gap-4 items-center">
                                 <div class="mb-4 w-full">
                                     <x-forms.label name="name" :label="__('category.form.name')" required />
-                                    <x-text-input id="name" class="block mt-1 w-full" type="text" name="name"
+                                    <x-text-input id="name" class="mt-1 w-full" type="text" name="name"
                                         value="{{ old('name') }}" required />
-                                    <x-input-error :messages="$errors->get('name')" class="mt-2" />
-
                                 </div>
                                 <div class="mb-4 w-full">
                                     <x-forms.label name="slug" :label="__('category.form.slug')" />
-                                    <x-text-input id="slug" class="block mt-1 w-full" type="text" name="slug"
+                                    <x-text-input id="slug" class="mt-1 w-full" type="text" name="slug"
                                         value="{{ old('slug') }}" />
                                 </div>
                             </div>
@@ -51,7 +49,7 @@
                                 </div>
                                 <div class="mb-4 w-full">
                                     <x-forms.label name="position" :label="__('category.form.position')" />
-                                    <x-text-input id="position" class="block mt-1 w-full" type="number" min="0"
+                                    <x-text-input id="position" class="mt-1 w-full" type="number" min="0"
                                         name="position" value="{{ old('position') ?? 0 }}" />
                                 </div>
                             </div>

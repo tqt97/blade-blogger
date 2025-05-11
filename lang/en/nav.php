@@ -10,4 +10,5 @@ return [
     'services' => 'Services',
     'contact' => 'Contact',
     'categories' => 'Categories',
+    'posts' => 'Posts',
 ];

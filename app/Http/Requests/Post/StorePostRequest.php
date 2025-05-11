@@ -29,12 +29,19 @@ class StorePostRequest extends FormRequest
             'content' => ['required', 'string'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'category_id' => ['required', 'integer', 'exists:categories,id'],
+            'is_featured' => ['required', 'boolean'],
             'is_published' => ['required', 'boolean'],
             'published_at' => ['nullable', 'date'],
             'user_id' => ['required', 'integer', 'exists:users,id'],
         ];
     }
 
+    /**
+     * Prepare the data for validation.
+     *
+     * This method is called after the request is validated. Here we can
+     * manipulate the data before it is passed to the validator.
+     */
     protected function prepareForValidation(): void
     {
         $slug = $this->input('slug');
@@ -44,6 +51,7 @@ class StorePostRequest extends FormRequest
         $this->merge([
             'slug' => $slug,
             'user_id' => auth()->id(),
+            'is_featured' => $this->boolean('is_featured'),
             'is_published' => $isPublished,
             'published_at' => $isPublished ? ($this->input('published_at') ?? now()) : null,
         ]);

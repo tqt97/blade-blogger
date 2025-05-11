@@ -44,9 +44,6 @@ class StoreCategoryRequest extends FormRequest
     {
         $this->merge([
             'slug' => $this->input('slug') ?: Str::slug($this->input('name')),
-        ]);
-
-        $this->merge([
             'is_active' => $this->boolean('is_active'),
         ]);
     }

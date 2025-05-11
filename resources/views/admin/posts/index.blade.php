@@ -39,8 +39,20 @@
                                 {{ __('common.items') }}
                             </div>
                         </div>
-                        {{-- Search --}}
+                        {{-- Filter - Search --}}
                         <div class="flex items-center gap-1">
+                            <form method="GET" action="{{ route('admin.posts.index') }}">
+                                <select name="status" onchange="this.form.submit()" class="rounded-md">
+                                    <option value="all">-- {{ __('common.all') }} --</option>
+                                    <option value="active" {{ request('status') === 'active' ? 'selected' : '' }}>
+                                        {{ __('common.active') }}
+                                    </option>
+                                    <option value="trashed" {{ request('status') === 'trashed' ? 'selected' : '' }}>
+                                        {{ __('common.trashed') }}
+                                    </option>
+                                </select>
+                            </form>
+
                             <form action="{{ route('admin.posts.index') }}" method="GET"
                                 class="flex items-center gap-1">
                                 <input type="search" id="search" class="w-full rounded-md py-[8px]" name="search"
@@ -67,11 +79,10 @@
                                             class="rounded-md w-5 h-5 cursor-pointer">
                                     </th>
                                     <th class="px-4 py-4">{{ __('post.columns.title') }}</th>
-                                    <th class="px-4 py-4">{{ __('post.columns.image') }}</th>
                                     <th class="px-4 py-4">{{ __('post.columns.category_id') }}</th>
                                     <th class="px-4 py-4">{{ __('post.columns.user_id') }}</th>
                                     <th class="px-4 py-4 text-center">{{ __('post.columns.is_featured') }}</th>
-                                    <th class="px-4 py-4 text-center">{{ __('post.columns.is_published') }}</th>
+                                    <th class="px-4 py-4 text-center">{{ __('post.columns.status') }}</th>
                                     <th class="px-4 py-4 text-center">{{ __('post.columns.published_at') }}</th>
                                     <th class="px-4 py-4 text-center"></th>
                                 </tr>
@@ -83,9 +94,10 @@
                                             <input type="checkbox" name="ids[]" id="{{ $post->id }}" value="{{ $post->id }}"
                                                 class="checkbox-item rounded-md w-5 h-5 cursor-pointer">
                                         </td>
-                                        <td class="px-4 py-3">{{ $post->title }}</td>
-                                        <td class="px-4 py-3">
-                                            <img src="{{ $post->image }}" alt="{{ $post->title }}" class="w-5 h-5">
+                                        <td class="px-4 py-3 flex items-center gap-2">
+                                            <img src="{{ $post->image_url }}" alt="{{ $post->title }}"
+                                                class="w-10 h-10 rounded-md border shadow">
+                                            {{ $post->title }}
                                         </td>
                                         <td class="px-4 py-3">{{ $post->category->name }}</td>
                                         <td class="px-4 py-3">{{ $post->user->name }}</td>
@@ -101,31 +113,59 @@
                                             @endif
                                         </td>
                                         <td class="px-4 py-3 text-center">
-                                            @if($post->is_published)
-                                                <span class="bg-green-500 text-white py-1 px-2 rounded-full text-xs">
-                                                    Yes
+                                            @if ($post->trashed())
+                                                <span class="bg-red-500 text-white py-1 px-2 rounded-full text-xs">
+                                                    {{ __('common.trashed') }}
                                                 </span>
                                             @else
-                                                <span class="bg-red-500 text-white py-1 px-2 rounded-full text-xs">
-                                                    No
-                                                </span>
+                                                @if($post->is_published)
+                                                    <span class="bg-green-500 text-white py-1 px-2 rounded-full text-xs">
+                                                        {{ __('common.published') }}
+                                                    </span>
+                                                @else
+                                                    <span class="bg-orange-500 text-white py-1 px-2 rounded-full text-xs">
+                                                        {{ __('common.unpublished') }}
+                                                    </span>
+                                                @endif
                                             @endif
+
                                         </td>
                                         <td class="px-4 py-3">{{ $post->published_at ?? '-' }}</td>
 
                                         <td class="flex items-center justify-center gap-2 px-4 py-3">
-                                            <a href="{{ route('admin.categories.edit', $post) }}"
-                                                class="text-blue-600 hover:text-blue-800">
-                                                <x-icons.pencil-square />
-                                            </a>
-                                            <form action="{{ route('admin.categories.destroy', $post) }}" method="POST"
-                                                onsubmit="return confirm('{{ __('common.confirm_delete') }}')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="py-3" aria-label="{{ __('common.delete') }}">
-                                                    <x-icons.trash class="text-red-500 hover:text-red-700" />
-                                                </button>
-                                            </form>
+                                            @if($post->trashed())
+                                                <form action="{{ route('admin.posts.restore', $post) }}" method="POST">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <button type="submit" class="py-3 text-green-500 hover:text-green-700"
+                                                        onclick="return confirm('{{ __('common.confirm_restore') }}')">
+                                                        <x-icons.arrow-uturn-left />
+                                                    </button>
+                                                </form>
+
+                                                <form action="{{ route('admin.posts.force-delete', $post) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="py-3 text-red-500 hover:text-red-700"
+                                                        onclick="return confirm('{{ __('common.confirm_force_delete') }}')">
+                                                        <x-icons.archive-box-x-mark />
+                                                    </button>
+                                                </form>
+                                            @else
+                                                <a href="{{ route('admin.posts.edit', $post) }}"
+                                                    class="text-blue-600 hover:text-blue-800">
+                                                    <x-icons.pencil-square />
+                                                </a>
+                                                <form action="{{ route('admin.posts.destroy', $post) }}" method="POST"
+                                                    onsubmit="return confirm('{{ __('common.confirm_delete') }}')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="py-3" aria-label="{{ __('common.delete') }}">
+                                                        <x-icons.trash class="text-red-500 hover:text-red-700" />
+                                                    </button>
+                                                </form>
+                                            @endif
+
                                         </td>
                                     </tr>
                                 @empty

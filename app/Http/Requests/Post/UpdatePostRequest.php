@@ -29,17 +29,29 @@ class UpdatePostRequest extends FormRequest
             'content' => ['required', 'string'],
             'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp', 'max:2048'],
             'category_id' => ['required', 'integer', 'exists:categories,id'],
+            'is_featured' => ['required', 'boolean'],
             'is_published' => ['required', 'boolean'],
             'published_at' => ['nullable', 'date'],
         ];
     }
 
+    /**
+     * Prepare the data for validation.
+     *
+     * This method is called after the request is validated. Here we can
+     * manipulate the data before it is passed to the validator.
+     */
     protected function prepareForValidation(): void
     {
         $isPublished = $this->boolean('is_published');
+        $publishedAt = $this->input('published_at');
+
         $this->merge([
+            'is_featured' => $this->boolean('is_featured'),
             'is_published' => $isPublished,
-            'published_at' => $isPublished ? ($this->input('published_at') ?? now()) : null,
+            'published_at' => $isPublished
+                ? ($publishedAt !== null ? $publishedAt : $this->route('post')->published_at)
+                : null,
         ]);
     }
 }

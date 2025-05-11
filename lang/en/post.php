@@ -35,6 +35,7 @@ return [
         'is_published' => 'Published',
         'published_at' => 'Published At',
         'image' => 'Image',
+        'status' => 'Status',
     ],
     'messages' => [
         'create_success' => 'Post created successfully',
@@ -46,5 +47,10 @@ return [
         'bulk_delete_success' => 'Posts deleted successfully',
         'bulk_delete_fail' => 'Posts deleted fail',
         'bulk_delete_empty' => 'Posts not selected',
+        'delete_image_fail' => 'Delete image fail',
+        'restore_success' => 'Post restored successfully',
+        'restore_fail' => 'Post restored fail',
+        'force_delete_success' => 'Post force deleted successfully',
+        'force_delete_fail' => 'Post force deleted fail',
     ],
 ];

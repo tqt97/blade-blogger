@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="mb-4 w-full">
                                     <x-forms.label name="image" :label="__('post.form.image')" />
-                                    <input type="file" name="image" id="image" accept="image/*">
+                                    <input type="file" name="image" id="image">
                                 </div>
                             </div>
 
@@ -68,12 +68,12 @@
                             </div>
                             <div class="flex gap-4 items-center">
                                 <div class="mb-4 w-1/2">
-                                    <x-forms.label name="is_published" :label="__('post.form.is_published')" />
-                                    <x-forms.checkbox name="is_published" />
-                                </div>
-                                <div class="mb-4 w-1/2">
                                     <x-forms.label name="is_featured" :label="__('post.form.is_featured')" />
                                     <x-forms.checkbox name="is_featured" />
+                                </div>
+                                <div class="mb-4 w-1/2">
+                                    <x-forms.label name="is_published" :label="__('post.form.is_published')" />
+                                    <x-forms.checkbox name="is_published" />
                                 </div>
                             </div>
                             <div class="flex gap-4 items-center mt-2">

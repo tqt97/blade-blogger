@@ -22,7 +22,6 @@ class PostFactory extends Factory
             'slug' => Str::slug($title),
             'excerpt' => fake()->sentence(),
             'content' => fake()->paragraph(),
-            'image' => fake()->imageUrl(),
             'is_featured' => fake()->boolean(),
             'is_published' => $isPublished = fake()->boolean(),
             'published_at' => $isPublished ? now() : null,

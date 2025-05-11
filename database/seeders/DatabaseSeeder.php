@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
                     ->count(5)
                     ->create([
                         'user_id' => $user->id,
-                        'category_id' => Category::inRandomOrder()->first()->id, // Gán category ngẫu nhiên
+                        'category_id' => Category::active()->inRandomOrder()->first()->id,
                     ]);
             });
 

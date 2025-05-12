@@ -11,4 +11,5 @@ return [
     'contact' => 'Contact',
     'categories' => 'Categories',
     'posts' => 'Posts',
+    'tags' => 'Tags',
 ];

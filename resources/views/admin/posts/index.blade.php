@@ -170,7 +170,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center py-3">
+                                        <td colspan="8" class="text-center py-3">
                                             {{ __('common.no_data') }}
                                         </td>
                                     </tr>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PostController;
+use App\Http\Controllers\Admin\TagController;
 
 Route::group(['prefix' => 'admin', 'middleware' => ['auth'], 'as' => 'admin.'], function () {
     // category
@@ -14,4 +15,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth'], 'as' => 'admin.'], 
         ->name('posts.force-delete')->withTrashed();
     Route::delete('posts/bulk-delete', [PostController::class, 'bulkDelete'])->name('posts.bulk-delete');
     Route::resource('posts', PostController::class)->withTrashed(['index']);
+
+    // tag
+    Route::delete('tags/bulk-delete', [TagController::class, 'bulkDelete'])->name('tags.bulk-delete');
+    Route::resource('tags', TagController::class);
 });

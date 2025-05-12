@@ -9,6 +9,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/admin/categories/index.js',
                 'resources/js/admin/posts/index.js',
+                'resources/js/admin/tags/index.js',
             ],
             refresh: true,
         }),

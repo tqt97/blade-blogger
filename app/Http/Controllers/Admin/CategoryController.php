@@ -7,6 +7,7 @@ use App\Http\Requests\Category\StoreCategoryRequest;
 use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Models\Category;
 use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -37,13 +38,8 @@ class CategoryController extends Controller
      */
     public function create(): View
     {
-        $categories = Category::query()
-            ->active()
-            ->select('id', 'name')
-            ->get();
-
         return view('admin.categories.create', [
-            'categories' => $categories,
+            'categories' => $this->getOptions(),
         ]);
     }
 
@@ -81,13 +77,9 @@ class CategoryController extends Controller
      */
     public function edit(Category $category): View
     {
-        $categoryOptions = Category::query()->active()
-            ->select('id', 'name')
-            ->get();
-
         return view('admin.categories.edit', [
             'category' => $category,
-            'categoryOptions' => $categoryOptions,
+            'categoryOptions' => $this->getOptions(),
         ]);
     }
 
@@ -138,5 +130,13 @@ class CategoryController extends Controller
 
             return back()->with('error', __('category.messages.bulk_delete_fail'));
         }
+    }
+
+    protected function getOptions(): Collection
+    {
+        return Category::query()
+            ->active()
+            ->select('id', 'name')
+            ->get();
     }
 }

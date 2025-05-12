@@ -17,7 +17,7 @@ class TagController extends Controller
      */
     public function index(): View
     {
-        $tags = Tag::with('posts')->withCount('posts')->latest()->paginate();
+        $tags = Tag::withCount('posts')->latest()->paginate();
 
         return view('admin.tags.index', [
             'tags' => $tags,

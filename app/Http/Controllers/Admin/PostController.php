@@ -28,7 +28,7 @@ class PostController extends Controller
         $search = $request->input('search');
         $status = $request->input('status');
         $posts = Post::query()
-            ->with(['category', 'user'])
+            ->with(['category:id,name', 'user:id,name'])
             ->status($status)
             ->search($search)
             ->latest()

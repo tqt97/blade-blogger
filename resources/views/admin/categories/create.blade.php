@@ -39,7 +39,7 @@
                                     <select name="parent_id" id="parent_id"
                                         class="mt-2 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                                         <option value="">{{ __('category.form.select_parent') }}</option>
-                                        @foreach ($categories as $category)
+                                        @foreach ($categoryOptions as $category)
                                             <option value="{{ $category->id }}"
                                                 {{ (int) old('parent_id') === $category->id ? 'selected' : '' }}>
                                                 {{ $category->name }}

@@ -46,7 +46,7 @@ class PostController extends Controller
     public function create(): View
     {
         return view('admin.posts.create', [
-            'categories' => $this->getOptions(),
+            'options' => Category::query()->active()->options()->get(),
         ]);
     }
 
@@ -95,7 +95,7 @@ class PostController extends Controller
     {
         return view('admin.posts.edit', [
             'post' => $post,
-            'options' => $this->getOptions(),
+            'options' => Category::query()->active()->options()->get(),
         ]);
     }
 

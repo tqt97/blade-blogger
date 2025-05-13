@@ -53,4 +53,9 @@ class Category extends Model
             $q->whereLike('name', '%'.$search.'%');
         });
     }
+
+    public function scopeOptions(Builder $query): Builder
+    {
+        return $query->select('id', 'name');
+    }
 }

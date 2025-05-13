@@ -32,8 +32,8 @@ class UpdatePostRequest extends FormRequest
             'is_featured' => ['required', 'boolean'],
             'is_published' => ['required', 'boolean'],
             'published_at' => ['nullable', 'date'],
-            'tags' => 'array',
-            'tags.*' => ['integer', 'exists:tags,id'],
+            'tags' => ['array', 'max:5'],
+            'tags.*' => ['bail', 'integer', 'exists:tags,id'],
         ];
     }
 
@@ -56,5 +56,14 @@ class UpdatePostRequest extends FormRequest
                 : null,
             'tags' => $this->input('tags') ?? [],
         ]);
+    }
+
+    public function messages(): array
+    {
+        return [
+            'tags.*.exists' => 'The selected tag does not exist.',
+            'tags.max' => 'You can select a maximum of 5 tags.',
+            'tags.bail' => 'The selected tag does not exist.',
+        ];
     }
 }

@@ -71,7 +71,7 @@ class PostController extends Controller
 
             DB::transaction(function () use ($data) {
                 $post = Post::create($data);
-                $post->tags()->attach($data['tags']);
+                $post->tags()->sync($data['tags']);
             });
 
             return to_route('admin.posts.index')->with('success', __('post.messages.create_success'));

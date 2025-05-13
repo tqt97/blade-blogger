@@ -34,7 +34,7 @@ class StorePostRequest extends FormRequest
             'published_at' => ['nullable', 'date'],
             'user_id' => ['required', 'integer', 'exists:users,id'],
             'tags' => 'array',
-            'tags.*' => ['integer', 'exists:tags,id'],
+            'tags.*' => ['bail', 'integer', 'exists:tags,id'],
         ];
     }
 
@@ -58,5 +58,14 @@ class StorePostRequest extends FormRequest
             'published_at' => $isPublished ? ($this->input('published_at') ?? now()) : null,
             'tags' => $this->input('tags') ?? [],
         ]);
+    }
+
+    public function messages(): array
+    {
+        return [
+            'tags.*.exists' => 'The selected tag does not exist.',
+            'tags.max' => 'You can select a maximum of 5 tags.',
+            'tags.bail' => 'The selected tag does not exist.',
+        ];
     }
 }

@@ -33,6 +33,8 @@ class StorePostRequest extends FormRequest
             'is_published' => ['required', 'boolean'],
             'published_at' => ['nullable', 'date'],
             'user_id' => ['required', 'integer', 'exists:users,id'],
+            'tags' => 'array',
+            'tags.*' => ['integer', 'exists:tags,id'],
         ];
     }
 
@@ -54,6 +56,7 @@ class StorePostRequest extends FormRequest
             'is_featured' => $this->boolean('is_featured'),
             'is_published' => $isPublished,
             'published_at' => $isPublished ? ($this->input('published_at') ?? now()) : null,
+            'tags' => $this->input('tags') ?? [],
         ]);
     }
 }

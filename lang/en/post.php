@@ -23,6 +23,8 @@ return [
         'is_published' => 'Is Published',
         'published_at' => 'Published At',
         'image' => 'Image',
+        'tags' => 'Tags',
+        'no_select_tags' => 'No select tags',
     ],
     'columns' => [
         'id' => 'ID',
@@ -36,6 +38,7 @@ return [
         'published_at' => 'Published At',
         'image' => 'Image',
         'status' => 'Status',
+        'tags' => 'Tags',
     ],
     'messages' => [
         'create_success' => 'Post created successfully',

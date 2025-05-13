@@ -39,7 +39,7 @@
                                     <select name="category_id" id="category_id"
                                         class="mt-2 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                                         <option value="">{{ __('post.form.select_category') }}</option>
-                                        @foreach ($options as $category)
+                                        @foreach ($categories as $category)
                                             <option value="{{ $category->id }}" {{ (int) old('category_id') === $category->id ? 'selected' : '' }}>
                                                 {{ $category->name }}
                                             </option>
@@ -49,6 +49,21 @@
                                 <div class="mb-4 w-full">
                                     <x-forms.label name="image" :label="__('post.form.image')" />
                                     <input type="file" name="image" id="image">
+                                </div>
+                            </div>
+
+                            <div class="flex gap-4 items-center">
+                                <div class="mb-4 w-1/2">
+                                    <x-forms.label name="tags" :label="__('post.form.tags')" />
+                                    <select name="tags[]" id="tags" multiple
+                                        class="mt-2 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                        <option value="__none__">{{ __('post.form.no_select_tags') }}</option>
+                                        @foreach ($tags as $tag)
+                                            <option value="{{ $tag->id }}" {{ in_array($tag->id, old('tags', [])) ? 'selected' : '' }}>
+                                                {{ $tag->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
 
@@ -85,4 +100,7 @@
             </div>
         </div>
     </div>
+    @push('js')
+        @vite('resources/js/admin/posts/create.js')
+    @endpush
 </x-app-layout>

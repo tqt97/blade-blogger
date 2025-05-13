@@ -32,6 +32,8 @@ class UpdatePostRequest extends FormRequest
             'is_featured' => ['required', 'boolean'],
             'is_published' => ['required', 'boolean'],
             'published_at' => ['nullable', 'date'],
+            'tags' => 'array',
+            'tags.*' => ['integer', 'exists:tags,id'],
         ];
     }
 
@@ -52,6 +54,7 @@ class UpdatePostRequest extends FormRequest
             'published_at' => $isPublished
                 ? ($publishedAt !== null ? $publishedAt : $this->route('post')->published_at)
                 : null,
+            'tags' => $this->input('tags') ?? [],
         ]);
     }
 }

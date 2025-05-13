@@ -41,9 +41,9 @@
                                     <select name="category_id" id="category_id"
                                         class="mt-2 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                                         <option value="">{{ __('post.form.select_category') }}</option>
-                                        @foreach ($options as $option)
-                                            <option value="{{ $option->id }}" {{ $option->id == $post->category_id ? 'selected' : ''}}>
-                                                {{ $option->name }}
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}" {{ $category->id == $post->category_id ? 'selected' : ''}}>
+                                                {{ $category->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -59,6 +59,20 @@
                                     <x-forms.label name="excerpt" :label="__('post.form.excerpt')" />
                                     <x-text-input id="excerpt" class="mt-1 w-full" type="text" name="excerpt"
                                         value="{{ $post->excerpt }}" />
+                                </div>
+                            </div>
+                            <div class="flex gap-4 items-center">
+                                <div class="mb-4 w-1/2">
+                                    <x-forms.label name="tags" :label="__('post.form.tags')" />
+                                    <select name="tags[]" id="tags" multiple
+                                        class="mt-2 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                        <option value="__none__">{{ __('post.form.no_select_tags') }}</option>
+                                        @foreach ($tags as $tag)
+                                            <option value="{{ $tag->id }}" {{ in_array($tag->id, old('tags', $post->tags->pluck('id')->toArray() ?? [])) ? 'selected' : '' }}>
+                                                {{ $tag->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="flex gap-4 items-center">
@@ -87,4 +101,7 @@
             </div>
         </div>
     </div>
+    @push('js')
+        @vite('resources/js/admin/posts/edit.js')
+    @endpush
 </x-app-layout>

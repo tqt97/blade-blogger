@@ -8,6 +8,7 @@ use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Tag;
 use App\Traits\HandleBulkDelete;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Collection;
@@ -29,6 +30,7 @@ class PostController extends Controller
         $status = $request->input('status');
         $posts = Post::query()
             ->with(['category:id,name', 'user:id,name'])
+            ->withCount('tags')
             ->status($status)
             ->search($search)
             ->latest()
@@ -46,7 +48,8 @@ class PostController extends Controller
     public function create(): View
     {
         return view('admin.posts.create', [
-            'options' => Category::query()->active()->options()->get(),
+            'categories' => Category::query()->active()->options()->get(),
+            'tags' => Tag::query()->options()->get(),
         ]);
     }
 
@@ -67,7 +70,8 @@ class PostController extends Controller
             }
 
             DB::transaction(function () use ($data) {
-                Post::create($data);
+                $post = Post::create($data);
+                $post->tags()->sync($data['tags']);
             });
 
             return to_route('admin.posts.index')->with('success', __('post.messages.create_success'));
@@ -95,7 +99,8 @@ class PostController extends Controller
     {
         return view('admin.posts.edit', [
             'post' => $post,
-            'options' => Category::query()->active()->options()->get(),
+            'categories' => Category::query()->active()->options()->get(),
+            'tags' => Tag::query()->options()->get(),
         ]);
     }
 
@@ -123,6 +128,7 @@ class PostController extends Controller
                 if ($post->isDirty()) {
                     $post->save();
                 }
+                $post->tags()->sync($data['tags']);
 
                 if ($isNewImage && $oldImage) {
                     DB::afterCommit(function () use ($oldImage) {

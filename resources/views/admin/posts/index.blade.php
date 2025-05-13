@@ -81,6 +81,7 @@
                                     <th class="px-4 py-4">{{ __('post.columns.title') }}</th>
                                     <th class="px-4 py-4">{{ __('post.columns.category_id') }}</th>
                                     <th class="px-4 py-4">{{ __('post.columns.user_id') }}</th>
+                                    <th class="px-4 py-4">{{ __('post.columns.tags') }}</th>
                                     <th class="px-4 py-4 text-center">{{ __('post.columns.is_featured') }}</th>
                                     <th class="px-4 py-4 text-center">{{ __('post.columns.status') }}</th>
                                     <th class="px-4 py-4 text-center">{{ __('post.columns.published_at') }}</th>
@@ -101,6 +102,7 @@
                                         </td>
                                         <td class="px-4 py-3">{{ $post->category->name }}</td>
                                         <td class="px-4 py-3">{{ $post->user->name }}</td>
+                                        <td class="px-4 py-3">{{ $post->tags_count }}</td>
                                         <td class="px-4 py-3 text-center">
                                             @if($post->is_featured)
                                                 <span class="bg-green-500 text-white py-1 px-2 rounded-full text-xs">

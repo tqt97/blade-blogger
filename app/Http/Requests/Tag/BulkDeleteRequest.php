@@ -29,7 +29,14 @@ class BulkDeleteRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $ids = array_filter(array_map('trim', explode(',', (string) $this->ids)));
+        // Normalize ids whether coming in as string or array
+        $idsInput = $this->ids;
+        if (is_array($idsInput)) {
+            $rawIds = $idsInput;
+        } else {
+            $rawIds = explode(',', (string) $idsInput);
+        }
+        $ids = array_filter(array_map('trim', $rawIds));
         $this->merge([
             'ids' => array_map('intval', $ids),
         ]);

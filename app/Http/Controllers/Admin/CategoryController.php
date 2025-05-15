@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Category\BulkDeleteRequest;
 use App\Http\Requests\Category\StoreCategoryRequest;
 use App\Http\Requests\Category\UpdateCategoryRequest;
 use App\Models\Category;
+use App\Traits\HandleBulkDelete;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,6 +15,8 @@ use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
+    use HandleBulkDelete;
+
     /**
      * Display a listing of the resource.
      */
@@ -114,20 +118,11 @@ class CategoryController extends Controller
         }
     }
 
-    public function bulkDelete(Request $request): RedirectResponse
+    /**
+     * Remove multiple the specified resource from storage.
+     */
+    public function bulkDelete(BulkDeleteRequest $request): RedirectResponse
     {
-        try {
-            $ids = explode(',', $request->input('ids'));
-            if (empty($ids)) {
-                return back()->with('warning', __('category.messages.bulk_delete_empty'));
-            }
-            Category::query()->whereIn('id', $ids)->delete();
-
-            return to_route('admin.categories.index')->with('success', __('category.messages.bulk_delete_success'));
-        } catch (\Throwable $th) {
-            Log::error($th->getMessage());
-
-            return back()->with('error', __('category.messages.bulk_delete_fail'));
-        }
+        return $this->bulkDeleteGeneric($request, Category::class);
     }
 }

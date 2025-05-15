@@ -27,7 +27,13 @@ trait HandleBulkDelete
         ?string $emptyKey = null
     ): RedirectResponse {
         try {
-            $ids = array_filter(explode(',', $request->input('ids', '')));
+            $idsParam = $request->input('ids', []);
+
+            if (is_array($idsParam)) {
+                $ids = array_filter($idsParam);
+            } else {
+                $ids = array_filter(explode(',', (string) $idsParam));
+            }
 
             if (empty($ids)) {
                 $key = $emptyKey ?? $this->resolveMessageKey($modelClass, 'bulk_delete_empty');

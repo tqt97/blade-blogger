@@ -2,7 +2,9 @@
 
 namespace App\Helpers;
 
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use RuntimeException;
@@ -31,10 +33,21 @@ class ImageHelper
      *
      * @param  string  $path  The path of the file to delete
      * @param  string  $disk  The disk to delete the file from
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    public static function delete(string $path, string $disk = 'public'): bool
+    public static function delete(string $path, string $disk = 'public', bool $throwIfMissing = false): bool
     {
-        return Storage::disk($disk)->exists($path) && Storage::disk($disk)->delete($path);
+        if (Storage::disk($disk)->missing($path)) {
+            if ($throwIfMissing) {
+                throw new FileNotFoundException("File [{$path}] does not exist on disk [{$disk}].");
+            }
+            Log::warning("File [{$path}] does not exist on disk [{$disk}].");
+
+            return false;
+        }
+
+        return Storage::disk($disk)->delete($path);
     }
 
     /**

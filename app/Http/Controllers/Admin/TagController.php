@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tag\BulkDeleteRequest;
 use App\Http\Requests\Tag\StoreTagRequest;
 use App\Http\Requests\Tag\UpdateTagRequest;
 use App\Models\Tag;
+use App\Traits\HandleBulkDelete;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
 
 class TagController extends Controller
 {
+    use HandleBulkDelete;
+
     /**
      * Display a listing of the resource.
      */
@@ -100,16 +104,11 @@ class TagController extends Controller
         }
     }
 
-    public function bulkDelete(): RedirectResponse
+    /**
+     * Remove multiple the specified resource from storage.
+     */
+    public function bulkDelete(BulkDeleteRequest $request): RedirectResponse
     {
-        try {
-            Tag::query()->whereIn('id', request('ids'))->delete();
-
-            return to_route('admin.tags.index')->with('success', __('tag.messages.bulk_delete_success'));
-        } catch (\Throwable $th) {
-            Log::error($th->getMessage());
-
-            return to_route('admin.tags.index')->with('error', __('tag.messages.bulk_delete_fail'));
-        }
+        return $this->bulkDeleteGeneric($request, Tag::class);
     }
 }

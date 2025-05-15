@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ImageHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Post\BulkDeleteRequest;
 use App\Http\Requests\Post\StorePostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
 use App\Models\Category;
@@ -161,7 +162,10 @@ class PostController extends Controller
         }
     }
 
-    public function bulkDelete(Request $request): RedirectResponse
+    /**
+     * Remove multiple the specified resource from storage.
+     */
+    public function bulkDelete(BulkDeleteRequest $request): RedirectResponse
     {
         return $this->bulkDeleteGeneric($request, Post::class);
     }

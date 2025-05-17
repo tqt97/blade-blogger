@@ -27,7 +27,7 @@ class FrontendLayout extends Component
             ->withCount('posts')
             ->having('posts_count', '>', 0)
             ->orderBy('posts_count', 'desc')
-            ->take(10)->get();
+            ->get();
         $categories = Category::query()
             ->active()
             ->withCount('posts')

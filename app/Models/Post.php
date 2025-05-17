@@ -146,10 +146,27 @@ class Post extends Model
     /**
      * Scope a query to apply filters for search, category, and author.
      */
+    // public function scopeFilter(Builder $query, array $filters): Builder
+    // {
+    //     return $query->when($filters['search'] ?? false, fn($query, $search) => $query->search($search))
+    //         ->when($filters['category'] ?? false, fn($query, $category) => $query->whereHas('category', fn($query) => $query->where('slug', $category)))
+    //         ->when($filters['author'] ?? false, fn($query, $author) => $query->whereHas('user', fn($query) => $query->where('username', $author)));
+    // }
+
     public function scopeFilter(Builder $query, array $filters): Builder
     {
-        return $query->when($filters['search'] ?? false, fn ($query, $search) => $query->search($search))
-            ->when($filters['category'] ?? false, fn ($query, $category) => $query->whereHas('category', fn ($query) => $query->where('slug', $category)))
-            ->when($filters['author'] ?? false, fn ($query, $author) => $query->whereHas('user', fn ($query) => $query->where('username', $author)));
+        return $query
+            ->when($filters['search'] ?? null, fn ($q, $search) => $q->where('title', 'like', "%$search%"))
+            ->when($filters['category'] ?? null, function ($q, $category) {
+                $q->whereHas('category', fn ($q) => $q->where('slug', $category));
+            })
+            ->when($filters['tag'] ?? null, function ($q, $tag) {
+                $q->whereHas('tags', fn ($q) => $q->where('name', $tag));
+            });
+    }
+
+    public function scopeSort(Builder $query, array $sortOptions): Builder
+    {
+        return $query->orderBy($sortOptions['sort'] ?? 'created_at', $sortOptions['direction'] ?? 'desc');
     }
 }

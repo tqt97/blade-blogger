@@ -5,14 +5,14 @@
             <input type="search" name="search"
                 class="w-full pr-10 rounded-md py-[6px] pl-3 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
                 value="{{ request('search') }}" placeholder="{{ __('common.search_placeholder') }}"
-                autocomplete="search" required />
+                autocomplete="search" />
             <button type="submit"
                 class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-indigo-600">
                 <x-icons.search class="w-5 h-5" />
             </button>
         </div>
 
-        <div class="flex justify-center gap-1">
+        <div class="flex justify-center gap-2">
             {{-- Limit --}}
             <select name="limit" onchange="this.form.submit()"
                 class="rounded-md shadow-sm border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:ring-indigo-500 focus:border-indigo-500 py-[6px] cursor-pointer">

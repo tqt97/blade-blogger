@@ -25,8 +25,8 @@ class HomeRequest extends FormRequest
         return [
             'search' => ['nullable', 'string'],
             'category' => ['nullable', 'string'],
-            'tag' => ['nullable', 'string'],
-            'sort' => ['nullable', Rule::in(['title', 'created_at'])],
+            'tag' => ['nullable', 'string', Rule::exists('tags', 'slug')],
+            'sort' => ['nullable', Rule::in(['title', 'created_at']), Rule::exists('categories', 'slug')],
             'direction' => ['nullable', Rule::in(['asc', 'desc'])],
             'limit' => ['nullable', 'integer', 'min:1', 'max:100'],
         ];

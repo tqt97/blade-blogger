@@ -161,7 +161,7 @@ class Post extends Model
                 $q->whereHas('category', fn ($q) => $q->where('slug', $category));
             })
             ->when($filters['tag'] ?? null, function ($q, $tag) {
-                $q->whereHas('tags', fn ($q) => $q->where('name', $tag));
+                $q->whereHas('tags', fn ($q) => $q->where('slug', $tag));
             });
     }
 

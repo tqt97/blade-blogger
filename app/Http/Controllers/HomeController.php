@@ -13,6 +13,7 @@ class HomeController extends Controller
         $requestValidated = $request->validated();
 
         $posts = Post::with(['category:id,name', 'user:id,name'])
+            ->published()
             ->filter($requestValidated)
             ->sort($requestValidated)
             ->paginate($requestValidated['limit'] ?? 10)

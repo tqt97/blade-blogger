@@ -1,54 +1,82 @@
-<article class="p-6 text-base bg-white border-t border-gray-200 dark:border-gray-700 dark:bg-gray-900">
-    <footer class="flex justify-between items-center mb-2">
+@props(['comment'])
+
+<article id="comment-{{ $comment->id }}" class="group relative text-base bg-white border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+    <div class="flex justify-between items-center mb-2">
         <div class="flex items-center">
             <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
-                <img class="mr-2 w-6 h-6 rounded-full"
-                    src="https://flowbite.com/docs/images/people/profile-picture-4.jpg" alt="Helene Engels">Helene
-                Engels
+                <x-users.avatar :user="$comment->user" size="6" />
+                {{ $comment->user->name }}
             </p>
-            <p class="text-sm text-gray-600 dark:text-gray-400"><time pubdate datetime="2022-06-23"
-                    title="June 23rd, 2022">Jun. 23, 2022</time></p>
+            <p class="text-sm text-gray-600 dark:text-gray-400"><time>{{ $comment->created_at->diffForHumans() }}</time>
+            </p>
         </div>
-        <button id="dropdownComment4Button" data-dropdown-toggle="dropdownComment4"
-            class="inline-flex items-center p-2 text-sm font-medium text-center text-gray-500 dark:text-gray-40 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-            type="button">
-            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                viewBox="0 0 16 3">
-                <path
-                    d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
-            </svg>
-        </button>
-        <!-- Dropdown menu -->
-        <div id="dropdownComment4"
-            class="hidden z-10 w-36 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200"
-                aria-labelledby="dropdownMenuIconHorizontalButton">
-                <li>
-                    <a href="#"
-                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Remove</a>
-                </li>
-                <li>
-                    <a href="#"
-                        class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Report</a>
-                </li>
-            </ul>
-        </div>
-    </footer>
-    <p class="text-gray-500 dark:text-gray-400">Thanks for sharing this. I do came from the Backend
-        development and explored some of the tools to design my Side Projects.</p>
-    <div class="flex items-center mt-4 space-x-4">
-        <button type="button"
-            class="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400 font-medium">
-            <svg class="mr-1.5 w-3.5 h-3.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                viewBox="0 0 20 18">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M5 5h5M5 8h2m6-3h2m-5 3h6m2-7H2a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h3v5l5-5h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1Z" />
-            </svg>
+    </div>
+
+    <div id="content-{{ $comment->id }}" class="text-gray-500 dark:text-gray-400">{!! $comment->content !!}</div>
+
+    <div class="flex items-center mt-1 flex-wrap gap-x-4 text-sm text-gray-500 dark:text-gray-400">
+        <button type="button" data-action="reply" data-id="{{ $comment->id }}"
+            class="flex items-center text-sm hover:underline dark:text-gray-400 font-medium">
             Reply
         </button>
+
+        @if (auth()->id() === $comment->user_id || auth()->user()?->isAdmin())
+            <button type="button" data-action="edit" data-id="{{ $comment->id }}" class="hover:underline">
+                Edit
+            </button>
+
+            <form method="POST" action="{{ route('comments.destroy', $comment) }}" class="delete-comment-form inline-block"
+                data-comment-id="{{ $comment->id }}">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="text-red-600 hover:underline">Delete</button>
+            </form>
+
+            <a href="#" class="hover:underline">Report</a>
+        @endif
     </div>
+
+
+    {{-- EDIT FORM --}}
+    <form method="POST" id="edit-form-{{ $comment->id }}" class="mt-2 ajax-edit-form slide-toggle"
+        action="{{ route('comments.update', $comment) }}" data-comment-id="{{ $comment->id }}"
+        data-url="{{ route('comments.update', $comment) }}">
+        @csrf
+        @method('PATCH')
+        <textarea name="content" rows="2" class="w-full border rounded p-2">{{ $comment->content }}</textarea>
+        <div class="flex gap-2 mt-1">
+            <button type="submit" data-action="edit" data-id="{{ $comment->id }}"
+                class="inline-flex items-center px-2 py-[6px] bg-gray-800 hover:bg-gray-900 text-white text-xs rounded-md cursor-pointer">Update</button>
+            <button type="button" data-comment-id="{{ $comment->id }}" class="cancel-edit-btn text-gray-600">
+                Cancel
+            </button>
+
+        </div>
+    </form>
+
+    {{-- reply form --}}
+    <form id="reply-form-{{ $comment->id }}" class="slide-toggle mt-2"
+        action="{{ route('comments.reply', $comment->id) }}" method="POST">
+        @csrf
+        <input type="hidden" name="post_id" value="{{ $comment->post->id }}">
+        <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+        <textarea name="content" rows="2" placeholder="Reply to {{ $comment->user->name }}"
+            class="w-full border rounded p-2"></textarea>
+        <button type="submit"
+            class="mt-1 inline-flex items-center px-3 py-[6px] bg-gray-800 hover:bg-gray-900 text-white text-sm rounded-md cursor-pointer">
+            Reply
+        </button>
+        <button type="button" data-comment-id="{{ $comment->id }}" class="cancel-reply-btn text-gray-600">
+            Cancel
+        </button>
+    </form>
+
+    {{-- children --}}
+    @if ($comment->children->count())
+        <div class="replies-container pl-6 space-y-3 border-l border-gray-300 border-dotted children-comments">
+            @foreach ($comment->children as $child)
+                <x-blogs.comment :comment="$child" />
+            @endforeach
+        </div>
+    @endif
 </article>

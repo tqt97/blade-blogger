@@ -26,8 +26,20 @@ class HomeController extends Controller
 
     public function show(Post $post): View
     {
+        // $post->load(['comments']);
+        $post
+        // ->load(['comments', 'comments.user', 'comments.children.user'])
+            ->loadCount('allComments');
+
+        $comments = $post->comments()
+            ->with('user', 'children.user') // eager load
+            ->whereNull('parent_id') // chỉ lấy comment gốc
+            ->latest()
+            ->get();
+
         return view('client.show', [
             'post' => $post,
+            'comments' => $comments,
         ]);
     }
 }

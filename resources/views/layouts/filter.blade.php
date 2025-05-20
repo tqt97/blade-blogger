@@ -48,7 +48,6 @@
             @if(request()->query->count() > 0)
                 <a href="{{ route('home') }}"
                     class="inline-flex items-center px-2 py-[6px] bg-gray-800 hover:bg-gray-900 text-white text-xs rounded-md cursor-pointer">
-                    {{-- <x-icons.archive-box-x-mark class="w-4 h-4 mr-1" /> --}}
                     {{ __('common.clear') }}
                 </a>
             @endif

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\CommentController;
-// use App\Http\Controllers\HomeController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,8 +17,8 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-// Route::get('/posts/{post}', [HomeController::class, 'show'])->name('posts.show');
-// Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/posts/{post}', [HomeController::class, 'show'])->name('posts.show');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::patch('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
 Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');

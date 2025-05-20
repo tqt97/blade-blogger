@@ -20,11 +20,7 @@ require __DIR__.'/auth.php';
 Route::get('/posts/{post}', [HomeController::class, 'show'])->name('posts.show');
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// comments
-// routes/web.php
 Route::patch('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
-
 Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
-// Route::patch('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])->name('comments.reply');

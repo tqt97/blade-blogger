@@ -1,6 +1,7 @@
 @props(['comment'])
 
-<article id="comment-{{ $comment->id }}" class="group relative text-base bg-white border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+<article id="comment-{{ $comment->id }}"
+    class="group relative text-base py-3 bg-white border-gray-200 dark:border-gray-700 dark:bg-gray-900">
     <div class="flex justify-between items-center mb-2">
         <div class="flex items-center">
             <p class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold">
@@ -12,7 +13,7 @@
         </div>
     </div>
 
-    <div id="content-{{ $comment->id }}" class="text-gray-500 dark:text-gray-400">{!! $comment->content !!}</div>
+    <div id="content-{{ $comment->id }}" class="text-gray-500 dark:text-gray-400">{{ $comment->content }}</div>
 
     <div class="flex items-center mt-1 flex-wrap gap-x-4 text-sm text-gray-500 dark:text-gray-400">
         <button type="button" data-action="reply" data-id="{{ $comment->id }}"

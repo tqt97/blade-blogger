@@ -11,7 +11,8 @@ class CommentController extends Controller
     public function store(Request $request, Post $post)
     {
         $validated = $request->validate([
-            'content' => 'required|string|min:1',
+            'content' => 'required|string|min:3|max:1000',
+
             'parent_id' => 'nullable|exists:comments,id',
         ]);
 
@@ -27,10 +28,11 @@ class CommentController extends Controller
     public function update(Comment $comment, Request $request)
     {
         $validated = $request->validate([
-            'content' => 'required|string|min:1',
+            'content' => 'required|string|min:3|max:1000',
+
         ]);
 
-        if ($comment->content !== $validated['content']) {
+        if (trim($comment->content) !== trim($validated['content'])) { // ADDED WHITESPACE NORMALIZATION
             $comment->update([
                 'content' => $validated['content'],
             ]);
@@ -38,7 +40,7 @@ class CommentController extends Controller
 
         if ($request->ajax()) {
             return response()->json([
-                'success' => true,
+                'success' => $comment->wasChanged(),
                 'content' => $comment->content,
                 'commentId' => $comment->id,
             ]);
@@ -66,6 +68,7 @@ class CommentController extends Controller
         $data = [
             'user_id' => auth()->id(),
             'post_id' => $comment->post_id,
+            'parent_id' => $comment->id,
             'content' => $request->content,
         ];
         $reply = $comment->replies()->create($data);
